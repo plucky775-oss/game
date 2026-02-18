@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#111827" />
+  <title>배전 가공 현장 LIVE - 책임자의 선택</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="app" class="app">
+    <!-- Header -->
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand__title">⚡ 배전 가공 현장 LIVE</div>
+        <div class="brand__sub">시공관리책임자 판단 시뮬레이터</div>
+      </div>
+      <div class="topbar__actions">
+        <button id="btnSound" class="chip" aria-pressed="true" title="효과음 토글">🔊</button>
+        <button id="btnHelp" class="chip" title="도움말">?</button>
+      </div>
+    </header>
+
+    <!-- Main -->
+    <main class="main">
+      <!-- Start Screen -->
+      <section id="screenStart" class="screen screen--active">
+        <div class="card hero">
+          <div class="hero__kicker">상용앱 수준 MVP</div>
+          <h1 class="hero__title">현장 딜레마: <span class="accent">공사효율</span> vs <span class="accent">안전</span></h1>
+          <p class="hero__desc">
+            민원·사장 독촉·작업자 불만·돌발상황 속에서
+            <strong>관리이행(통제)</strong>을 유지하며 공정을 완수하세요.
+            <span class="muted">(교육용 강화: 중대재해 확률 상향)</span>
+          </p>
+
+          <div class="divider"></div>
+
+          <h2 class="h2">공사 유형 선택</h2>
+          <div class="grid">
+            <button class="btn btn--primary" data-start="overhead_new">신규공사</button>
+            <button class="btn btn--primary" data-start="overhead_relocate_pole">지장전주 이설공사</button>
+            <button class="btn btn--primary" data-start="overhead_replace_tr">노후 변압기 교체공사</button>
+            <button class="btn btn--primary" data-start="overhead_replace_switch">불량 개폐기 교체공사</button>
+          </div>
+
+          <div class="row row--wrap">
+            <label class="toggle">
+              <input id="chkTimer" type="checkbox" checked />
+              <span>⏱ 긴급상황 타이머(10초) 사용</span>
+            </label>
+            <label class="toggle">
+              <input id="chkVibe" type="checkbox" checked />
+              <span>📳 진동(가능 기기)</span>
+            </label>
+          </div>
+
+          <div class="divider"></div>
+
+          <details class="details">
+            <summary>게임이 어떻게 무섭게/재밌게 동작하나요?</summary>
+            <ul class="list">
+              <li><strong>선택</strong>이 게이지(위험·관리이행·민원·통제·계통) 값을 바꿉니다.</li>
+              <li><strong>일반재해</strong>는 자주, <strong>중대재해</strong>는 “누적 리스크 + 랜덤 확률”로 발생합니다.</li>
+              <li>위험이 높아도 무사고가 나올 수 있습니다. 대신 <em>“이번엔 운이 좋았다”</em>가 뜹니다.</li>
+              <li>“절차 생략/무정전 강행/통제 약화”가 누적되면 어느 순간 터집니다.</li>
+            </ul>
+          </details>
+
+          <div class="footerNote">
+            ※ 본 게임은 교육/훈련용 시뮬레이션이며, 실제 작업은 관련 규정·절차·현장 위험성평가를 우선합니다.
+          </div>
+        </div>
+      </section>
+
+      <!-- Game Screen -->
+      <section id="screenGame" class="screen">
+        <div class="dash card">
+          <div class="dash__top">
+            <div class="dash__left">
+              <div id="projectTitle" class="dash__title">—</div>
+              <div id="projectMeta" class="dash__meta">—</div>
+            </div>
+            <div class="dash__right">
+              <div class="chip chip--small" id="chipDay">DAY 1</div>
+              <div class="chip chip--small" id="chipStep">1 / 7</div>
+            </div>
+          </div>
+
+          <div class="gauges">
+            <div class="gauge">
+              <div class="gauge__label">⚠ 현장위험도</div>
+              <div class="gauge__bar"><div id="gHazard" class="gauge__fill"></div></div>
+              <div id="vHazard" class="gauge__value">0%</div>
+            </div>
+            <div class="gauge">
+              <div class="gauge__label">⚖ 관리이행지수</div>
+              <div class="gauge__bar"><div id="gCompliance" class="gauge__fill"></div></div>
+              <div id="vCompliance" class="gauge__value">0%</div>
+            </div>
+            <div class="gauge">
+              <div class="gauge__label">📈 공정률</div>
+              <div class="gauge__bar"><div id="gProgress" class="gauge__fill"></div></div>
+              <div id="vProgress" class="gauge__value">0%</div>
+            </div>
+            <div class="gauge">
+              <div class="gauge__label">📞 민원압박</div>
+              <div class="gauge__bar"><div id="gComplaint" class="gauge__fill"></div></div>
+              <div id="vComplaint" class="gauge__value">0%</div>
+            </div>
+            <div class="gauge">
+              <div class="gauge__label">💰 업체압박</div>
+              <div class="gauge__bar"><div id="gBoss" class="gauge__fill"></div></div>
+              <div id="vBoss" class="gauge__value">0%</div>
+            </div>
+            <div class="gauge">
+              <div class="gauge__label">👷 작업통제력</div>
+              <div class="gauge__bar"><div id="gCrew" class="gauge__fill"></div></div>
+              <div id="vCrew" class="gauge__value">0%</div>
+            </div>
+            <div class="gauge">
+              <div class="gauge__label">🔄 계통안정성</div>
+              <div class="gauge__bar"><div id="gGrid" class="gauge__fill"></div></div>
+              <div id="vGrid" class="gauge__value">0%</div>
+            </div>
+            <div class="gauge">
+              <div class="gauge__label">🚨 중대재해위험</div>
+              <div class="gauge__bar"><div id="gFatal" class="gauge__fill"></div></div>
+              <div id="vFatal" class="gauge__value">0%</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="layout">
+          <div class="scene card">
+            <div class="scene__hdr">
+              <div id="sceneTitle" class="scene__title">—</div>
+              <div class="scene__right">
+                <div id="timerWrap" class="timer hidden" aria-live="polite">
+                  <span class="timer__label">⏱</span>
+                  <span id="timerVal" class="timer__val">10</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="scene__body">
+              <div id="sceneDesc" class="scene__desc">—</div>
+
+              <div id="bubbleArea" class="bubbles"></div>
+
+              <div class="choices">
+                <div id="choicesArea" class="choices__grid"></div>
+              </div>
+            </div>
+          </div>
+
+          <aside class="side">
+            <div class="card feed">
+              <div class="feed__hdr">
+                <div class="feed__title">현장 로그</div>
+                <div class="feed__actions">
+                  <button id="btnPause" class="chip chip--small">⏸</button>
+                  <button id="btnRestart" class="chip chip--small">↻</button>
+                </div>
+              </div>
+              <div id="feedList" class="feed__list" aria-live="polite"></div>
+            </div>
+
+            <div class="card mini">
+              <div class="mini__row">
+                <div class="mini__k">🎯 목표</div>
+                <div class="mini__v">공정 완료 + 중대재해 0</div>
+              </div>
+              <div class="mini__row">
+                <div class="mini__k">🧩 누적</div>
+                <div id="vNeg" class="mini__v">관리소홀 0</div>
+              </div>
+              <div class="mini__row">
+                <div class="mini__k">🏅 최고점</div>
+                <div id="vBest" class="mini__v">—</div>
+              </div>
+              <div class="mini__row">
+                <div class="mini__k">🧪 모드</div>
+                <div class="mini__v">교육용 강화</div>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <!-- Result Screen -->
+      <section id="screenResult" class="screen">
+        <div class="card result">
+          <div class="result__top">
+            <div id="resultTitle" class="result__title">—</div>
+            <div id="resultGrade" class="badge">—</div>
+          </div>
+
+          <div id="resultSummary" class="result__summary"></div>
+
+          <div class="divider"></div>
+
+          <div class="result__grid">
+            <div class="card stat">
+              <div class="stat__k">최종 공정률</div>
+              <div id="rProgress" class="stat__v">—</div>
+            </div>
+            <div class="card stat">
+              <div class="stat__k">중대재해</div>
+              <div id="rFatal" class="stat__v">—</div>
+            </div>
+            <div class="card stat">
+              <div class="stat__k">일반재해</div>
+              <div id="rMinor" class="stat__v">—</div>
+            </div>
+            <div class="card stat">
+              <div class="stat__k">평균 관리이행</div>
+              <div id="rComp" class="stat__v">—</div>
+            </div>
+            <div class="card stat">
+              <div class="stat__k">민원압박 최고</div>
+              <div id="rComplain" class="stat__v">—</div>
+            </div>
+            <div class="card stat">
+              <div class="stat__k">계통 사고</div>
+              <div id="rGrid" class="stat__v">—</div>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="row row--wrap">
+            <button id="btnPlayAgain" class="btn btn--primary">다시하기</button>
+            <button id="btnBackHome" class="btn">홈으로</button>
+            <button id="btnCopy" class="btn">결과 복사</button>
+          </div>
+
+          <details class="details">
+            <summary>개발자/통합용 메모</summary>
+            <pre class="code" id="integrationNote"></pre>
+          </details>
+        </div>
+      </section>
+    </main>
+
+    <!-- Modal -->
+    <div id="modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal__panel">
+        <div class="modal__hdr">
+          <div id="modalTitle" class="modal__title">도움말</div>
+          <button id="btnModalClose" class="chip">닫기</button>
+        </div>
+        <div id="modalBody" class="modal__body"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
