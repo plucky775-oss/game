@@ -158,7 +158,7 @@ function spawnBall(x, y, speed){
 
 function resetBalls(){
   balls.length = 0;
-  const baseSpeed = 5 + stage*0.55;
+  const baseSpeed = 9 + stage*0.9;
   spawnBall(cv.width/2, cv.height*0.62, baseSpeed);
 }
 
