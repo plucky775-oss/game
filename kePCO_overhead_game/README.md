@@ -1,33 +1,29 @@
-# 배전 가공 현장 LIVE (MVP)
+# kePCO_overhead_cartoon (초심플 만화풍)
 
-한전 배전공사(가공) 시공관리책임자의 의사결정 딜레마(공정/민원/업체압박/작업통제/계통안정성)를
-몰입형 UI로 체감하도록 만든 미니 시뮬레이션 게임입니다.
+- 배전가공 시공관리책임자 판단 시뮬레이션(만화풍)
+- 글 최소 / 스테이터스바 없음 / 선택 2~3개
+- 안전 선택은 항상 1번이 아니며, 읽고 판단해야 함
+- 안전을 잘 지키면 해피엔딩
 
-## 폴더 구성
-- index.html
-- style.css
-- data.js
-- app.js
+## 포함
+- 4개 공사 유형: 지장전주 이설 / 신규 / 변압기 교체 / 개폐기 교체
+- 각 유형 5장면(2~3분)
+- 결과(해피/아슬아슬/일반재해/사고) 만화 이미지 + 칭찬/분발 문구
 
-## 앱에 붙이는 방법(간단)
-### 1) 링크로 붙이기
-앱(정적 웹앱) 폴더에 `kePCO_overhead_game` 폴더를 통째로 복사 후,
-메뉴에서 `kePCO_overhead_game/index.html` 로 이동.
+## 앱에 붙이기
+### 1) 폴더 통째로 업로드
+리포지토리에 `kePCO_overhead_cartoon/` 폴더를 그대로 넣고 GitHub Pages 활성화.
 
-### 2) iframe으로 붙이기(가장 쉬움)
+접속:
+- `.../kePCO_overhead_cartoon/`
+
+### 2) 특정 유형 바로 시작
+- `.../kePCO_overhead_cartoon/index.html?type=relocate`
+- `.../kePCO_overhead_cartoon/index.html?type=new`
+- `.../kePCO_overhead_cartoon/index.html?type=transformer`
+- `.../kePCO_overhead_cartoon/index.html?type=switch`
+
+### 3) iframe 임베드
 ```html
-<iframe
-  src="kePCO_overhead_game/index.html"
-  style="width:100%;height:100vh;border:0;"
-></iframe>
+<iframe src="kePCO_overhead_cartoon/index.html" style="width:100%;height:100vh;border:0;"></iframe>
 ```
-
-### 3) 특정 공사 유형으로 바로 시작
-- `kePCO_overhead_game/index.html?type=overhead_new`
-- `kePCO_overhead_game/index.html?type=overhead_relocate_pole`
-- `kePCO_overhead_game/index.html?type=overhead_replace_tr`
-- `kePCO_overhead_game/index.html?type=overhead_replace_switch`
-
-## 메모
-- 중대재해는 교육용 강화 확률(누적 리스크 + 랜덤)로 발생합니다.
-- 실제 작업은 관련 규정/절차/현장 위험성평가를 우선합니다.
